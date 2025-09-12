@@ -1,19 +1,21 @@
 require("dotenv").config()
 const express = require("express")
+const cors = require("cors")
 const supabase = require("./db.js")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 const JWT_SECRET = process.env.JWT_SECRET
 
 // sign up
 app.post("/sign-up", async (req, res) => {
-    const { email, password } = req.body
+    const { name, email, password } = req.body
 
-    if (!email || !password) return res.status(400).json({ error: "Missing required fields" })
+    if (!name || !email || !password) return res.status(400).json({ error: "Missing required fields" })
 
     const { data: existingUser } = await supabase
         .from("users")
@@ -27,7 +29,7 @@ app.post("/sign-up", async (req, res) => {
 
     const { data, error } = await supabase
         .from("users")
-        .insert({ email, password: hashedPassword })
+        .insert({ name, email, password: hashedPassword })
         .select()
 
     if (error) return res.status(500).json({ error: error.message })
