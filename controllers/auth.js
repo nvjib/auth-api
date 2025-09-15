@@ -65,7 +65,13 @@ const login = async (req, res) => {
   return res.status(200).json({ message: "Logged in successfully", token })
 }
 
+// ---------------- PROFILE ----------------
+const profile = async (req, res) => {
+  res.json({ message: "Welcome!", user: req.user })
+}
+
 module.exports = {
   signUp,
-  login
+  login,
+  profile
 }
